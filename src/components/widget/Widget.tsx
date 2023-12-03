@@ -4,15 +4,23 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { ReactNode } from "react";
 
-const Widget = ({ type }) => {
-    let data;
+interface IData {
+    title: String,
+    isMoney: Boolean,
+    link: String,
+    icon: ReactNode,
+}
+
+const Widget = (props: { type: String }) => {
+    var data: IData;
 
     //temporary
     const amount = 100;
     const diff = 20;
 
-    switch (type) {
+    switch (props.type) {
         case "user":
             data = {
                 title: "USERS",
@@ -75,6 +83,20 @@ const Widget = ({ type }) => {
             };
             break;
         default:
+            data = {
+                title: "USERS",
+                isMoney: false,
+                link: "See all users",
+                icon: (
+                    <PersonOutlinedIcon
+                        className="icon"
+                        style={{
+                            color: "crimson",
+                            backgroundColor: "rgba(255, 0, 0, 0.2)",
+                        }}
+                    />
+                ),
+            };
             break;
     }
 

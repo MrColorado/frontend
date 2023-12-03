@@ -1,4 +1,12 @@
-const DarkModeReducer = (state, action) => {
+export interface IModeAction {
+    type: string
+}
+
+export interface IModeState {
+    darkMode: boolean
+}
+
+export const DarkModeReducer = (state: IModeState, action: IModeAction) => {
     switch (action.type) {
         case "LIGHT": {
             return {
@@ -19,5 +27,3 @@ const DarkModeReducer = (state, action) => {
             return state;
     }
 };
-
-export default DarkModeReducer;

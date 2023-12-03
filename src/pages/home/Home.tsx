@@ -1,10 +1,11 @@
+import "./home.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import "./home.scss";
 import Widget from "../../components/widget/Widget";
 import Table from "../../components/table/Table";
+import React from "react";
 
-const Home = () => {
+const Home: React.FC<{}> = () => {
     return (
         <div className="home">
             <Sidebar />

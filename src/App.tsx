@@ -3,24 +3,23 @@ import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext } from "react";
-import { DarkModeContext } from "./context/darkModeContext";
+import { DarkContext } from "./context/darkModeContext";
 import "./style/dark.scss";
 
-import { NovelServerClient } from "./grpc/novel_grpc_web_pb";
+import { NovelServerClient } from "./grpc/NovelServiceClientPb";
 import NovelService from "./grpc/requester";
 
 const client = new NovelServerClient("http://localhost:8080", null, null);
 
-function App() {
-  const { darkMode } = useContext(DarkModeContext);
-
+function App(): JSX.Element {
+  const { darkTheme, setDarkTheme } = useContext(DarkContext);
+  NovelService(client);
   return (
-    <div className={darkMode ? "app dark" : "app"}>
-      <NovelService client={client} />
+    <div className={darkTheme ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
+          <Route path="/" >
+            <Route index element={< Home />} />
             <Route path="users">
               <Route index element={<List />} />
               <Route path=":userId" element={<Single />} />
