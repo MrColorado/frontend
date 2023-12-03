@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Generated
+novel_grpc_web_pb.js
+novel_pb.js
