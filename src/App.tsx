@@ -6,14 +6,8 @@ import { useContext } from "react";
 import { DarkContext } from "./context/darkModeContext";
 import "./style/dark.scss";
 
-import { NovelServerClient } from "./grpc/NovelServiceClientPb";
-import NovelService from "./grpc/requester";
-
-const client = new NovelServerClient("http://localhost:8080", null, null);
-
 function App(): JSX.Element {
   const { darkTheme, setDarkTheme } = useContext(DarkContext);
-  NovelService(client);
   return (
     <div className={darkTheme ? "app dark" : "app"}>
       <BrowserRouter>

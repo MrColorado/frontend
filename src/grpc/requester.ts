@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { ListNovelRequest, ListNovelResponse } from "./novel_pb.js"
+import { ListNovelRequest, ListNovelResponse, NovelData } from "./novel_pb.js"
 import { NovelServerClient } from "./NovelServiceClientPb.js"
 import { RpcError } from "grpc-web";
 
-export default function NovelService(client: NovelServerClient) {
+export function NovelService(client: NovelServerClient) {
     useEffect(() => {
         const req = new ListNovelRequest();
         client.listNovel(req, null, (err: RpcError, response: ListNovelResponse) => {
@@ -20,7 +20,5 @@ export default function NovelService(client: NovelServerClient) {
                 console.log("\n\n");
             });
         });
-
-
     })
 }
