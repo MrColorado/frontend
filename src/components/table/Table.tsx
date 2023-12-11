@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import { RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
@@ -15,19 +16,12 @@ import { ListNovelRequest, ListNovelResponse, NovelData } from "./../../grpc/nov
 
 const client = new NovelServerClient("http://localhost:8080", null, null);
 
-const List = () => {
-    const [novels, setNovels] = useState<Array<NovelData>>([]);
+const GenericTable = (novels: Array<NovelData>) => {
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const req = new ListNovelRequest();
-        client.listNovel(req, null, (err: RpcError, response: ListNovelResponse) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            setNovels(response.getNovelsList());
-        });
-    }, [])
+    function navigateToSingle(title: String) {
+        navigate("/novels/" + title);
+    }
 
     return (
         <TableContainer component={Paper} className="table">
@@ -42,7 +36,7 @@ const List = () => {
                 </TableHead>
                 <TableBody>
                     {novels.map((row, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={index} onClick={() => navigateToSingle("1")}>
                             <TableCell className="tableCell">{row.getTitle()}</TableCell>
                             {/* <TableCell className="tableCell">
                                 <div className="cellWrapper">
@@ -64,4 +58,36 @@ const List = () => {
     );
 };
 
-export default List;
+export const NewestNovelTable = () => {
+    const [novels, setNovels] = useState<Array<NovelData>>([]);
+
+    useEffect(() => {
+        const req = new ListNovelRequest();
+        client.listNovel(req, null, (err: RpcError, response: ListNovelResponse) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            setNovels(response.getNovelsList());
+        });
+    }, [])
+
+    return GenericTable(novels);
+};
+
+export const NovelTable = (props: { min: Number, max: number }) => {
+    const [novels, setNovels] = useState<Array<NovelData>>([]);
+
+    useEffect(() => {
+        const req = new ListNovelRequest();
+        client.listNovel(req, null, (err: RpcError, response: ListNovelResponse) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            setNovels(response.getNovelsList());
+        });
+    }, [])
+
+    return GenericTable(novels);
+};

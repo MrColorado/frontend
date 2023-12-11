@@ -14,13 +14,9 @@ function App(): JSX.Element {
         <Routes>
           <Route path="/" >
             <Route index element={< Home />} />
-            <Route path="users">
+            <Route path="novels">
               <Route index element={<List />} />
-              <Route path=":userId" element={<Single />} />
-            </Route>
-            <Route path="products">
-              <Route index element={<List />} />
-              <Route path=":productId" element={<Single />} />
+              <Route path=":novelId" element={<Single />} />
             </Route>
           </Route>
         </Routes>

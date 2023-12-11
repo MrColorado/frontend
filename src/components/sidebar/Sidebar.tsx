@@ -1,9 +1,6 @@
 import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { Link } from "react-router-dom";
 import { DarkContext } from "../../context/darkModeContext";
 import { IModeAction } from "../../context/darkModeReducer";
@@ -22,31 +19,19 @@ const Sidebar = () => {
             <div className="center">
                 <ul>
                     <p className="title">MAIN</p>
-                    <li>
-                        <DashboardIcon className="icon" />
-                        <span>Dashboard</span>
-                    </li>
+                    <Link to="/" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DashboardIcon className="icon" />
+                            <span>Dashboard</span>
+                        </li>
+                    </Link>
                     <p className="title">LISTS</p>
-                    <Link to="/users" style={{ textDecoration: "none" }}>
+                    <Link to="/novels" style={{ textDecoration: "none" }}>
                         <li>
-                            <PersonOutlineIcon className="icon" />
-                            <span>Users</span>
+                            <LibraryBooksIcon className="icon" />
+                            <span>Novels</span>
                         </li>
                     </Link>
-                    <Link to="/products" style={{ textDecoration: "none" }}>
-                        <li>
-                            <StoreIcon className="icon" />
-                            <span>Products</span>
-                        </li>
-                    </Link>
-                    <li>
-                        <CreditCardIcon className="icon" />
-                        <span>Orders</span>
-                    </li>
-                    <li>
-                        <LocalShippingIcon className="icon" />
-                        <span>Delivery</span>
-                    </li>
                 </ul>
             </div>
             <div className="bottom">

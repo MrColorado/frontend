@@ -1,9 +1,11 @@
 import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import List from "../../components/table/Table";
+import { useParams } from "react-router-dom";
 
 const Single = () => {
+  let { novelId } = useParams();
+  console.log(novelId)
   return (
     <div className="single">
       <Sidebar />
@@ -42,10 +44,10 @@ const Single = () => {
             </div>
           </div>
         </div>
-        <div className="bottom">
+        {/* <div className="bottom">
           <h1 className="title">Last Transactions</h1>
           <List />
-        </div>
+        </div> */}
       </div>
     </div>
   );

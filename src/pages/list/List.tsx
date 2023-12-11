@@ -1,7 +1,7 @@
 import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../components/datatable/Datatable"
+import { NovelTable } from "../../components/table/Table"
 
 const List = () => {
     return (
@@ -9,7 +9,7 @@ const List = () => {
             <Sidebar />
             <div className="listContainer">
                 <Navbar />
-                <Datatable />
+                <NovelTable {...{ min: 1, max: 10 }} />
             </div>
         </div>
     )

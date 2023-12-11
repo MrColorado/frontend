@@ -2,7 +2,7 @@ import "./home.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Widget from "../../components/widget/Widget";
-import Table from "../../components/table/Table";
+import { NewestNovelTable } from "../../components/table/Table";
 import React from "react";
 
 const Home: React.FC<{}> = () => {
@@ -18,8 +18,8 @@ const Home: React.FC<{}> = () => {
                     <Widget type="balance" />
                 </div>
                 <div className="listContainer">
-                    <div className="listTitle">Latest Transactions</div>
-                    <Table />
+                    <div className="listTitle">Lastest update</div>
+                    <NewestNovelTable />
                 </div>
             </div>
         </div>

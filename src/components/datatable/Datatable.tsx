@@ -2,8 +2,13 @@ import "./datatable.scss";
 import { DataGrid, GridRenderCellParams, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 // import { userColumns, userRows, IUserColumns } from "../../datatablesource";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { Pagination } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+
+
+import { RpcError } from "grpc-web";
+import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
+import { ListNovelRequest, ListNovelResponse, NovelData } from "./../../grpc/novel_pb"
 
 
 const rows: GridRowsProp = [
@@ -132,35 +137,39 @@ const columns: GridColDef[] = [
     },
 ];
 
+const client = new NovelServerClient("http://localhost:8080", null, null);
+
+
 const Datatable = () => {
-    const [data, setData] = useState(rows);
+    const [novels, setNovels] = useState<Array<NovelData>>([]);
 
-    const handleDelete = (id: Number) => {
-        setData(data.filter((item) => item.id !== id));
-    };
+    useEffect(() => {
+        const req = new ListNovelRequest();
+        client.listNovel(req, null, (err: RpcError, response: ListNovelResponse) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            setNovels(response.getNovelsList());
+        });
+    }, [])
 
-    const actionColumn = [
-        {
-            field: "action",
-            headerName: "Action",
-            width: 200,
-            renderCell: (params: GridRenderCellParams<any>) => {
-                return (
-                    <div className="cellAction">
-                        <Link to="/users/test" style={{ textDecoration: "none" }}>
-                            <div className="viewButton">View</div>
-                        </Link>
-                        <div
-                            className="deleteButton"
-                            onClick={() => handleDelete(params.row.id)}
-                        >
-                            Delete
-                        </div>
-                    </div>
-                );
-            },
-        },
-    ];
+    // const actionColumn = [
+    //     {
+    //         field: "action",
+    //         headerName: "Action",
+    //         width: 200,
+    //         renderCell: (params: GridRenderCellParams<any>) => {
+    //             return (
+    //                 <div className="cellAction">
+    //                     <Link to="/users/test" style={{ textDecoration: "none" }}>
+    //                         <div className="viewButton">View</div>
+    //                     </Link>
+    //                 </div>
+    //             );
+    //         },
+    //     },
+    // ];
     return (
         <div className="datatable">
             <div className="datatableTitle">
@@ -172,7 +181,8 @@ const Datatable = () => {
             <DataGrid
                 className="datagrid"
                 rows={rows}
-                columns={columns.concat(actionColumn)}
+                // columns={columns.concat(actionColumn)}
+                columns={columns}
                 checkboxSelection
                 initialState={{
                     pagination: { paginationModel: { pageSize: 5 } },
