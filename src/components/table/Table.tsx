@@ -19,8 +19,8 @@ const client = new NovelServerClient("http://localhost:8080", null, null);
 const GenericTable = (novels: Array<NovelData>) => {
     const navigate = useNavigate();
 
-    function navigateToSingle(title: String) {
-        navigate("/novels/" + title);
+    function navigateToSingle(id: Number) {
+        navigate("/novels/" + id);
     }
 
     return (
@@ -36,7 +36,7 @@ const GenericTable = (novels: Array<NovelData>) => {
                 </TableHead>
                 <TableBody>
                     {novels.map((row, index) => (
-                        <TableRow key={index} onClick={() => navigateToSingle("1")}>
+                        <TableRow key={index} onClick={() => navigateToSingle(row.getId())}>
                             <TableCell className="tableCell">{row.getTitle()}</TableCell>
                             {/* <TableCell className="tableCell">
                                 <div className="cellWrapper">

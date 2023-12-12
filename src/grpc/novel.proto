@@ -11,11 +11,11 @@ message NovelData {
 }
 
 message GetNovelRequest{
-    // oneof field_search {
-    //     int64 id = 1;
-    //     string title = 2;
-    // }
-    int64 id = 1;
+    oneof field_search {
+        int64 id = 1;
+        string title = 2;
+    }
+    // int64 id = 1;
 }
 
 message GetNovelResponse {

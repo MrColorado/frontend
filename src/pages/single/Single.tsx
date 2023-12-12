@@ -3,9 +3,31 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useParams } from "react-router-dom";
 
+
+import React, { useState, useEffect } from 'react';
+
+import { RpcError } from "grpc-web";
+import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
+import { GetNovelRequest, GetNovelResponse, NovelData } from "./../../grpc/novel_pb"
+
+const client = new NovelServerClient("http://localhost:8080", null, null);
+
 const Single = () => {
-  let { novelId } = useParams();
-  console.log(novelId)
+  const { novelId } = useParams();
+  const [novel, setNovel] = useState<NovelData>();
+
+  useEffect(() => {
+    const req = new GetNovelRequest();
+    req.setId(Number(novelId));
+    client.getNovel(req, null, (err: RpcError, response: GetNovelResponse) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      setNovel(response.getNovel());
+    });
+  }, [novelId])
+
   return (
     <div className="single">
       <Sidebar />
@@ -21,24 +43,20 @@ const Single = () => {
                 className="itemImg"
               />
               <div className="details">
-                <h1 className="itemTitle">Jane Doe</h1>
+                <h1 className="itemTitle">{novel?.getTitle()}</h1>
                 <div className="detailItem">
-                  <span className="itemKey">Email:</span>
-                  <span className="itemValue">janedoe@gmail.com</span>
+                  <span className="itemKey">Author :</span>
+                  <span className="itemValue">{novel?.getAuthor()}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Phone:</span>
-                  <span className="itemValue">+1 2345 67 89</span>
+                  <span className="itemKey">Nb Chapter:</span>
+                  <span className="itemValue">{novel?.getChapter()}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Address:</span>
+                  <span className="itemKey">Description:</span>
                   <span className="itemValue">
-                    Elton St. 234 Garden Yd. NewYork
+                    {novel?.getDescription()}
                   </span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Country:</span>
-                  <span className="itemValue">USA</span>
                 </div>
               </div>
             </div>
