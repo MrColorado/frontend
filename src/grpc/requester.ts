@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ListNovelRequest, ListNovelResponse, NovelData } from "./novel_pb.js"
+import { ListNovelRequest, ListNovelResponse, FullNovel } from "./novel_pb.js"
 import { NovelServerClient } from "./NovelServiceClientPb.js"
 import { RpcError } from "grpc-web";
 
@@ -13,11 +13,11 @@ export function NovelService(client: NovelServerClient) {
             }
             let bookList = response?.getNovelsList() || [];
             bookList.forEach(element => {
-                console.log("Title : " + element.getTitle() + "\n");
-                console.log("Description : " + element.getDescription() + "\n");
-                console.log("Author : " + element.getAuthor() + "\n");
-                console.log("Chapter : " + element.getChapter() + "\n");
-                console.log("\n\n");
+                // console.log("Title : " + element.getTitle() + "\n");
+                // console.log("Tags : " + element.getTagsList + "\n");
+                // console.log("ImagePath : " + element.getImagepath() + "\n");
+                // console.log("Chapter : " + element.getChapter() + "\n");
+                // console.log("\n\n");
             });
         });
     })

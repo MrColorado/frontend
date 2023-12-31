@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 import { RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
-import { ListNovelRequest, ListNovelResponse, NovelData } from "./../../grpc/novel_pb"
+import { ListNovelRequest, ListNovelResponse, PartialNovel } from "./../../grpc/novel_pb"
 
 
 const rows: GridRowsProp = [
@@ -141,7 +141,7 @@ const client = new NovelServerClient("http://localhost:8080", null, null);
 
 
 const Datatable = () => {
-    const [novels, setNovels] = useState<Array<NovelData>>([]);
+    const [novels, setNovels] = useState<Array<PartialNovel>>([]);
 
     useEffect(() => {
         const req = new ListNovelRequest();
