@@ -65,10 +65,10 @@ const Single = () => {
           </div>
         </div>
         {
-          novel?.getChaptersList !== undefined ? (
+          novel?.getChaptersList !== undefined && novel.getNovel() !== undefined ? (
             <div className="bottom">
-              <h1 className="title">Chapters</h1>
-              <Cardtable novelId={novel.getNovel() === undefined ? 0 : novel.getNovel()!.getId()} chapters={novel?.getChaptersList()}></Cardtable>
+              <h1 className="title">Books</h1>
+              <Cardtable novel={novel.getNovel()!} chapters={novel?.getChaptersList()}></Cardtable>
             </div>
           ) : (
             <div></div>

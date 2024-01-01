@@ -1,70 +1,95 @@
-import { Chapter, GetBookRequest, GetBookResponse } from "../../grpc/novel_pb";
+import { Chapter, GetBookRequest, PartialNovel } from "../../grpc/novel_pb";
 import { Grid } from "@mui/material";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
 
+
 const client = new NovelServerClient("http://localhost:8080", null, null);
 
+function addLeading0(value: number) {
+    let num = value.toString();
+    while (num.length < 3)
+        num = "0" + num;
+    return num;
+}
 
-// const Card = (props: { data: Chapter }) => {
-//     return (
-//         <span className="title">{props.data.getStart()}</span>
-//     )
-// }
+function concatArray(left: Uint8Array, rigth: Uint8Array) {
+    let merge = new Uint8Array(left.length + rigth.length);
+    merge.set(left, 0);
+    merge.set(rigth, left.length);
+    return merge;
+}
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
-
-export const Cardtable = (props: { novelId: number, chapters: Array<Chapter> }) => {
-    function concatArray(left: Uint8Array, rigth: Uint8Array) {
-        let merge = new Uint8Array(left.length + rigth.length);
-        merge.set(left, 0);
-        merge.set(rigth, left.length);
-        return merge;
-    }
-
-    function getBook(novelId: number, start: number, end: number) {
-        function getBook() {
-            return new Promise<Uint8Array>((resolve, reject) => {
-                const chapter = new Chapter();
-                chapter.setStart(start);
-                chapter.setEnd(end);
-                const req = new GetBookRequest();
-                req.setNovelid(novelId);
-                req.setChapter(chapter);
+function getBook(novel: PartialNovel, chapter: Chapter) {
+    function getBook() {
+        return new Promise<Uint8Array>((resolve, reject) => {
+            const req = new GetBookRequest();
+            req.setNovelid(novel.getId());
+            req.setChapter(chapter);
 
 
-                const stream = client.getBook(req);
-                var bytes = new Uint8Array();
-                stream.on("data", (book) => (bytes = concatArray(bytes, book.getChunk_asU8())));
-                stream.on("error", reject);
-                stream.on("end", () => resolve(bytes));
-            });
-        }
-
-        getBook().then((bytes) => {
-            var data = new Blob(([bytes]), { type: 'application/epub+zip' });
-            var bookUrl = window.URL.createObjectURL(data);
-            const tempLink = document.createElement('a');
-            tempLink.href = bookUrl;
-            tempLink.setAttribute('download', 'filename.epub');
-            tempLink.click();
+            var bytes = new Uint8Array();
+            const stream = client.getBook(req);
+            stream.on("data", (book) => (bytes = concatArray(bytes, book.getChunk_asU8())));
+            stream.on("error", reject);
+            stream.on("end", () => resolve(bytes));
         });
     }
 
+    getBook().then((bytes) => {
+        var data = new Blob(([bytes]), { type: 'application/epub+zip' });
+        var bookUrl = window.URL.createObjectURL(data);
+        const tempLink = document.createElement('a');
+        tempLink.href = bookUrl;
+        tempLink.setAttribute('download', novel.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub');
+        tempLink.click();
+    });
+}
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    maxWidth: 300,
+    color: theme.palette.text.primary,
+}));
+
+export const Cardtable = (props: { novel: PartialNovel, chapters: Array<Chapter> }) => {
     return (
-        <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Grid container>
             {props.chapters.map((chapter, index) => (
-                <Grid item xs={2} sm={4} md={4} key={index}>
-                    <Item onClick={() => getBook(props.novelId, chapter.getStart(), chapter.getEnd())}> {chapter.getStart()} + "-" + {chapter.getEnd()} </Item>
-                </Grid>
+                <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                    <StyledPaper elevation={4}
+                        sx={{
+                            my: 1,
+                            mx: 'auto',
+                            p: 2,
+                            width: "90%"
+                        }}
+                    >
+                        <Grid item key={index} container>
+                            <Grid item xs container direction="column" spacing={2}>
+                                <Grid item xs>
+                                    <Typography gutterBottom variant="subtitle1" component="div">
+                                        Book : {index}
+                                    </Typography>
+                                    <Typography variant="body2" gutterBottom>
+                                        Start : {addLeading0(chapter.getStart())} End : {addLeading0(chapter.getEnd())}
+                                    </Typography>
+                                </Grid>
+                                <Grid item onClick={() => getBook(props.novel, chapter)}>
+                                    <Button variant="contained">
+                                        Download
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </StyledPaper>
+                </Box>
             ))}
         </Grid>
     )
