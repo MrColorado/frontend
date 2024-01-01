@@ -3,10 +3,7 @@ import { Grid } from "@mui/material";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-import { ClientReadableStream, RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
-import { ListNovelRequest, ListNovelResponse, PartialNovel } from "./../../grpc/novel_pb"
-import { useContext } from "react";
 
 const client = new NovelServerClient("http://localhost:8080", null, null);
 
@@ -26,10 +23,16 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const Cardtable = (props: { novelId: number, chapters: Array<Chapter> }) => {
+    function concatArray(left: Uint8Array, rigth: Uint8Array) {
+        let merge = new Uint8Array(left.length + rigth.length);
+        merge.set(left, 0);
+        merge.set(rigth, left.length);
+        return merge;
+    }
 
     function getBook(novelId: number, start: number, end: number) {
         function getBook() {
-            return new Promise<string>((resolve, reject) => {
+            return new Promise<Uint8Array>((resolve, reject) => {
                 const chapter = new Chapter();
                 chapter.setStart(start);
                 chapter.setEnd(end);
@@ -39,16 +42,15 @@ export const Cardtable = (props: { novelId: number, chapters: Array<Chapter> }) 
 
 
                 const stream = client.getBook(req);
-                var bytes = "";
-                stream.on("data", (book) => (bytes += book.getChunk()));
+                var bytes = new Uint8Array();
+                stream.on("data", (book) => (bytes = concatArray(bytes, book.getChunk_asU8())));
                 stream.on("error", reject);
                 stream.on("end", () => resolve(bytes));
             });
         }
 
         getBook().then((bytes) => {
-            console.log(bytes);
-            var data = new Blob(([bytes]), { type: 'text/plain' });
+            var data = new Blob(([bytes]), { type: 'application/epub+zip' });
             var bookUrl = window.URL.createObjectURL(data);
             const tempLink = document.createElement('a');
             tempLink.href = bookUrl;
