@@ -54,7 +54,6 @@ function getBook(novel: PartialNovel, chapter: Chapter) {
 const StyledPaper = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
-    maxWidth: 300,
     color: theme.palette.text.primary,
 }));
 
@@ -62,17 +61,16 @@ export const Cardtable = (props: { novel: PartialNovel, chapters: Array<Chapter>
     return (
         <Grid container>
             {props.chapters.map((chapter, index) => (
-                <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
-                    <StyledPaper elevation={4}
-                        sx={{
-                            my: 1,
-                            mx: 'auto',
-                            p: 2,
-                            width: "90%"
-                        }}
-                    >
-                        <Grid item key={index} container>
-                            <Grid item xs container direction="column" spacing={2}>
+                <Grid item key={index} xs={12} sm={12} md={6} lg={4} xl={3} container>
+                    <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                        <StyledPaper elevation={4}
+                            sx={{
+                                my: 1,
+                                mx: 'auto',
+                                p: 2,
+                            }}
+                        >
+                            <Grid item xs container>
                                 <Grid item xs>
                                     <Typography gutterBottom variant="subtitle1" component="div">
                                         Book : {index}
@@ -87,9 +85,9 @@ export const Cardtable = (props: { novel: PartialNovel, chapters: Array<Chapter>
                                     </Button>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                    </StyledPaper>
-                </Box>
+                        </StyledPaper>
+                    </Box>
+                </Grid>
             ))}
         </Grid>
     )
