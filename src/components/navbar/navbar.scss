@@ -13,19 +13,24 @@
         align-items: center;
         justify-content: space-between;
 
-        .search {
+        .searchs {
             display: flex;
-            align-items: center;
-            border: 0.5px solid lightgray;
-            padding: 3px;
 
-            input {
-                border: none;
-                outline: none;
-                background: transparent;
+            .search {
+                display: flex;
+                align-items: center;
+                border: 0.5px solid lightgray;
+                padding: 3px;
+                margin: 3px;
 
-                &::placeholder {
-                    font-size: 12px;
+                input {
+                    border: none;
+                    outline: none;
+                    background: transparent;
+
+                    &::placeholder {
+                        font-size: 12px;
+                    }
                 }
             }
         }

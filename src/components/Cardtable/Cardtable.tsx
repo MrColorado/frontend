@@ -5,11 +5,19 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
+import ButtonBase from '@mui/material/ButtonBase';
 
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
 
-
 const client = new NovelServerClient("http://localhost:8080", null, null);
+
+const Img = styled('img')({
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '90%',
+    maxHeight: '100%',
+});
 
 function addLeading0(value: number) {
     let num = value.toString();
@@ -57,7 +65,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-export const Cardtable = (props: { novel: PartialNovel, chapters: Array<Chapter> }) => {
+export const CardBookTable = (props: { novel: PartialNovel, chapters: Array<Chapter> }) => {
     return (
         <Grid container>
             {props.chapters.map((chapter, index) => (
@@ -83,6 +91,43 @@ export const Cardtable = (props: { novel: PartialNovel, chapters: Array<Chapter>
                                     <Button variant="contained">
                                         Download
                                     </Button>
+                                </Grid>
+                            </Grid>
+                        </StyledPaper>
+                    </Box>
+                </Grid>
+            ))}
+        </Grid>
+    )
+}
+
+export const CardNovelTable = (props: { novels: Array<PartialNovel> }) => {
+    const navigate = useNavigate();
+
+    function navigateToSingle(id: Number) {
+        navigate("/novels/" + id);
+    }
+
+    return (
+        <Grid container>
+            {props.novels.map((novel, index) => (
+                <Grid item key={index} xs={12} sm={12} md={6} lg={4} xl={3} container>
+                    <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                        <StyledPaper elevation={4}
+                            sx={{
+                                my: 1,
+                                mx: 'auto',
+                                p: 2,
+                            }}
+                        >
+                            <Grid container onClick={() => navigateToSingle(novel.getId())} >
+                                <Grid xs={6} item>
+                                    <Typography gutterBottom variant="subtitle1" component="div">
+                                        {novel.getTitle()}
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={6} item>
+                                    <Img src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" />
                                 </Grid>
                             </Grid>
                         </StyledPaper>

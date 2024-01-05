@@ -1,12 +1,9 @@
 import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import { Cardtable } from "../../components/Cardtable/Cardtable";
+import { CardBookTable } from "../../components/Cardtable/Cardtable";
 import { useParams } from "react-router-dom";
-
-
-import React, { useState, useEffect } from 'react';
-
+import { useState, useEffect } from 'react';
 import { RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
 import { GetNovelRequest, GetNovelResponse, FullNovel } from "./../../grpc/novel_pb"
@@ -68,7 +65,7 @@ const Single = () => {
           novel?.getChaptersList !== undefined && novel.getNovel() !== undefined ? (
             <div className="bottom">
               <h1 className="title">Books</h1>
-              <Cardtable novel={novel.getNovel()!} chapters={novel?.getChaptersList()}></Cardtable>
+              <CardBookTable novel={novel.getNovel()!} chapters={novel?.getChaptersList()}></CardBookTable>
             </div>
           ) : (
             <div></div>
