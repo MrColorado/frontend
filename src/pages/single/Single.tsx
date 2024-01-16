@@ -2,11 +2,12 @@ import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { CardBookTable } from "../../components/Cardtable/Cardtable";
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
 import { GetNovelRequest, GetNovelResponse, FullNovel } from "./../../grpc/novel_pb"
+
+import { useParams } from "react-router-dom";
 
 const client = new NovelServerClient("http://localhost:8080", null, null);
 
@@ -16,7 +17,8 @@ const Single = () => {
 
   useEffect(() => {
     const req = new GetNovelRequest();
-    req.setId(Number(novelId));
+    req.setId(String(novelId));
+
     client.getNovel(req, null, (err: RpcError, response: GetNovelResponse) => {
       if (err) {
         console.error(err);
@@ -45,7 +47,7 @@ const Single = () => {
                 <h1 className="itemTitle">{novel?.getNovel()?.getTitle()}</h1>
                 <div className="detailItem">
                   <span className="itemKey">Author :</span>
-                  <span className="itemValue">{novel?.getAuthor()}</span>
+                  <span className="itemValue">{novel?.getNovel()?.getAuthor()}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Nb Chapter:</span>
@@ -54,7 +56,7 @@ const Single = () => {
                 <div className="detailItem">
                   <span className="itemKey">Description:</span>
                   <span className="itemValue">
-                    {novel?.getSummary()}
+                    {novel?.getNovel()?.getSummary()}
                   </span>
                 </div>
               </div>
@@ -62,10 +64,10 @@ const Single = () => {
           </div>
         </div>
         {
-          novel?.getChaptersList !== undefined && novel.getNovel() !== undefined ? (
+          novel?.getChaptersList !== undefined ? (
             <div className="bottom">
               <h1 className="title">Books</h1>
-              <CardBookTable novel={novel.getNovel()!} chapters={novel?.getChaptersList()}></CardBookTable>
+              <CardBookTable novel={novel} chapters={novel?.getChaptersList()}></CardBookTable>
             </div>
           ) : (
             <div></div>

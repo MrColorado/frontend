@@ -1,4 +1,4 @@
-import { Chapter, GetBookRequest, PartialNovel } from "../../grpc/novel_pb";
+import { Chapter, GetBookRequest, PartialNovel, FullNovel } from "../../grpc/novel_pb";
 import { Grid } from "@mui/material";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -33,13 +33,12 @@ function concatArray(left: Uint8Array, rigth: Uint8Array) {
     return merge;
 }
 
-function getBook(novel: PartialNovel, chapter: Chapter) {
+function getBook(novel: FullNovel, chapter: Chapter) {
     function getBook() {
         return new Promise<Uint8Array>((resolve, reject) => {
             const req = new GetBookRequest();
-            req.setNovelid(novel.getId());
+            req.setNovelid(String(novel.getNovel()?.getId()));
             req.setChapter(chapter);
-
 
             var bytes = new Uint8Array();
             const stream = client.getBook(req);
@@ -54,7 +53,10 @@ function getBook(novel: PartialNovel, chapter: Chapter) {
         var bookUrl = window.URL.createObjectURL(data);
         const tempLink = document.createElement('a');
         tempLink.href = bookUrl;
-        tempLink.setAttribute('download', novel.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub');
+        tempLink.setAttribute('download', novel.getNovel()?.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub');
+
+        console.log(novel.getNovel()?.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub')
+
         tempLink.click();
     });
 }
@@ -65,7 +67,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-export const CardBookTable = (props: { novel: PartialNovel, chapters: Array<Chapter> }) => {
+export const CardBookTable = (props: { novel: FullNovel, chapters: Array<Chapter> }) => {
     return (
         <Grid container>
             {props.chapters.map((chapter, index) => (
@@ -104,7 +106,7 @@ export const CardBookTable = (props: { novel: PartialNovel, chapters: Array<Chap
 export const CardNovelTable = (props: { novels: Array<PartialNovel> }) => {
     const navigate = useNavigate();
 
-    function navigateToSingle(id: Number) {
+    function navigateToSingle(id: string) {
         navigate("/novels/" + id);
     }
 

@@ -19,7 +19,8 @@ const client = new NovelServerClient("http://localhost:8080", null, null);
 const GenericTable = (novels: Array<PartialNovel>) => {
     const navigate = useNavigate();
 
-    function navigateToSingle(id: Number) {
+    function navigateToSingle(id: String) {
+        console.log(id)
         navigate("/novels/" + id);
     }
 
@@ -30,7 +31,7 @@ const GenericTable = (novels: Array<PartialNovel>) => {
                     <TableRow>
                         <TableCell className="tableCell">Cover</TableCell>
                         <TableCell className="tableCell">Title</TableCell>
-                        <TableCell className="tableCell">Tags</TableCell>
+                        <TableCell className="tableCell">Genre</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -42,7 +43,7 @@ const GenericTable = (novels: Array<PartialNovel>) => {
                                 </div>
                             </TableCell>}
                             <TableCell className="tableCell">{row.getTitle()}</TableCell>
-                            <TableCell className="tableCell">{row.getTagsList().toString()}</TableCell>
+                            <TableCell className="tableCell">{row.getGenresList().toString()}</TableCell>
                             {/* <TableCell className="tableCell">
                                 <div className="cellWrapper">
                                     <img src={row.img} alt="" className="image" />

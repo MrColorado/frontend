@@ -63,6 +63,7 @@ const Navbar = () => {
             } else {
                 setErrorScrapeModal(true);
             }
+            setRequest("")
         });
     }
 
@@ -75,7 +76,7 @@ const Navbar = () => {
             </Snackbar>
             <Snackbar open={successScrapeModal} autoHideDuration={snackbarDisplayTime} onClose={handleCloseSuccess}>
                 <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
-                    Failed to find requested novel
+                    Currently getting your novel
                 </Alert>
             </Snackbar>
             <div className="wrapper">

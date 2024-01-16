@@ -16,7 +16,7 @@ function App(): JSX.Element {
           <Route path="/" >
             <Route index element={< Home />} />
             <Route path="novels">
-              <Route index element={<List />} />
+              <Route element={<List />} />
               <Route path=":novelId" element={<Single />} />
             </Route>
             <Route path="search">
