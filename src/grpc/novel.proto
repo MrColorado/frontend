@@ -35,7 +35,8 @@ message GetBookRequest {
 }
 
 message GetBookResponse {
-    bytes chunk = 1;
+    bytes content = 1;
+    string title = 2;
 }
 
 message GetNovelRequest{
@@ -66,7 +67,7 @@ message RequestNovelResponse {
 }
 
 service NovelServer{
-    rpc GetBook(GetBookRequest) returns (stream GetBookResponse) {};
+    rpc GetBook(GetBookRequest) returns (GetBookResponse) {};
     rpc GetNovel(GetNovelRequest) returns (GetNovelResponse) {};
     rpc ListNovel(ListNovelRequest) returns (ListNovelResponse) {};
     rpc RequestNovel(RequestNovelRequest) returns (RequestNovelResponse) {};

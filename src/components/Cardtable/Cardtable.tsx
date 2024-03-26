@@ -1,4 +1,4 @@
-import { Chapter, GetBookRequest, PartialNovel, FullNovel } from "../../grpc/novel_pb";
+import { Chapter, GetBookRequest, PartialNovel, FullNovel, GetBookResponse } from "../../grpc/novel_pb";
 import { Grid } from "@mui/material";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
-import ButtonBase from '@mui/material/ButtonBase';
-
+import { RpcError } from "grpc-web";
 import { NovelServerClient } from "./../../grpc/NovelServiceClientPb";
 
 const client = new NovelServerClient("http://localhost:8080", null, null);
@@ -34,22 +33,44 @@ function concatArray(left: Uint8Array, rigth: Uint8Array) {
 }
 
 function getBook(novel: FullNovel, chapter: Chapter) {
-    function getBook() {
-        return new Promise<Uint8Array>((resolve, reject) => {
-            const req = new GetBookRequest();
-            req.setNovelid(String(novel.getNovel()?.getId()));
-            req.setChapter(chapter);
+    // From stream to request
+    // function getBook() {
+    //     return new Promise<Uint8Array>((resolve, reject) => {
+    //         const req = new GetBookRequest();
+    //         req.setNovelid(String(novel.getNovel()?.getId()));
+    //         req.setChapter(chapter);
 
-            var bytes = new Uint8Array();
-            const stream = client.getBook(req);
-            stream.on("data", (book) => (bytes = concatArray(bytes, book.getChunk_asU8())));
-            stream.on("error", reject);
-            stream.on("end", () => resolve(bytes));
-        });
-    }
+    //         var bytes = new Uint8Array();
+    //         const stream = client.getBook(req);
+    //         stream.on("data", (book) => (bytes = concatArray(bytes, book.getChunk_asU8())));
+    //         stream.on("error", reject);
+    //         stream.on("end", () => resolve(bytes));
+    //     });
+    // }
 
-    getBook().then((bytes) => {
-        var data = new Blob(([bytes]), { type: 'application/epub+zip' });
+    // getBook().then((bytes) => {
+    //     var data = new Blob(([bytes]), { type: 'application/epub+zip' });
+    //     var bookUrl = window.URL.createObjectURL(data);
+    //     const tempLink = document.createElement('a');
+    //     tempLink.href = bookUrl;
+    //     tempLink.setAttribute('download', novel.getNovel()?.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub');
+
+    //     console.log(novel.getNovel()?.getTitle() + '-' + chapter.getStart() + '-' + chapter.getEnd() + '.epub')
+
+    //     tempLink.click();
+    // });
+
+
+    const req = new GetBookRequest();
+    req.setNovelid(String(novel.getNovel()?.getId()));
+    req.setChapter(chapter);
+
+    client.getBook(req, null, (err: RpcError, response: GetBookResponse) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        var data = new Blob(([response.getContent_asU8()]), { type: 'application/epub+zip' });
         var bookUrl = window.URL.createObjectURL(data);
         const tempLink = document.createElement('a');
         tempLink.href = bookUrl;
