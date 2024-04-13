@@ -14,12 +14,12 @@ function App(): JSX.Element {
       <BrowserRouter>
         <Routes>
           <Route path="/" >
-            <Route index element={< Home />} />
+            <Route index element={<Home />} />
             <Route path="novels">
-              <Route element={<List />} />
+              <Route path="" element={<List />} />
               <Route path=":novelId" element={<Single />} />
             </Route>
-            <Route path="search">
+            <Route path="search" element={<Search />}>
               <Route path=":novelName" element={<Search />} />
             </Route>
           </Route>

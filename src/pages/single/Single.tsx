@@ -39,9 +39,7 @@ const Single = () => {
             <h1 className="title">Information</h1>
             <div className="item">
               <img
-                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                alt=""
-                className="itemImg"
+                src={novel?.getNovel()?.getCoverurl()}
               />
               <div className="details">
                 <h1 className="itemTitle">{novel?.getNovel()?.getTitle()}</h1>
@@ -57,6 +55,12 @@ const Single = () => {
                   <span className="itemKey">Description:</span>
                   <span className="itemValue">
                     {novel?.getNovel()?.getSummary()}
+                  </span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Genres:</span>
+                  <span className="itemValue">
+                    {novel?.getNovel()?.getGenresList().toString().replaceAll(',', ' ')}
                   </span>
                 </div>
               </div>

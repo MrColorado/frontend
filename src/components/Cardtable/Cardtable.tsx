@@ -25,12 +25,12 @@ function addLeading0(value: number) {
     return num;
 }
 
-function concatArray(left: Uint8Array, rigth: Uint8Array) {
-    let merge = new Uint8Array(left.length + rigth.length);
-    merge.set(left, 0);
-    merge.set(rigth, left.length);
-    return merge;
-}
+// function concatArray(left: Uint8Array, rigth: Uint8Array) {
+//     let merge = new Uint8Array(left.length + rigth.length);
+//     merge.set(left, 0);
+//     merge.set(rigth, left.length);
+//     return merge;
+// }
 
 function getBook(novel: FullNovel, chapter: Chapter) {
     // From stream to request
@@ -146,11 +146,17 @@ export const CardNovelTable = (props: { novels: Array<PartialNovel> }) => {
                             <Grid container onClick={() => navigateToSingle(novel.getId())} >
                                 <Grid xs={6} item>
                                     <Typography gutterBottom variant="subtitle1" component="div">
-                                        {novel.getTitle()}
+                                        {novel.getTitle().substring(0, 20)}
+                                    </Typography>
+                                    <Typography gutterBottom variant="subtitle2" component="div">
+                                        {novel.getAuthor().substring(0, 20)}
+                                    </Typography>
+                                    <Typography gutterBottom variant="caption" component="div">
+                                        {novel.getSummary().substring(0, 200)}
                                     </Typography>
                                 </Grid>
                                 <Grid xs={6} item>
-                                    <Img src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" />
+                                    <Img src={novel.getCoverurl()} alt="" />
                                 </Grid>
                             </Grid>
                         </StyledPaper>
